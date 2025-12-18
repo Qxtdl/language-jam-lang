@@ -1,0 +1,11 @@
+push countdown 9999999
+push decrementor 1
+push zero 0
+loop:
+math countdown - decrementor
+goto done countdown zero
+goto loop
+done:
+push msg "done"
+echo msg
+pop
