@@ -8,4 +8,3 @@ goto loop
 done:
 push msg "done"
 echo msg
-pop

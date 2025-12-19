@@ -13,7 +13,7 @@
 
 lexed_source_code_t lexed_source_code;
 
-struct {
+struct interpreter {
    const char **pc;
    size_t pc_index;
 } interpreter;
@@ -34,7 +34,7 @@ void set_pc_line(int line) {
    interpreter.pc_index = line - 1;
 }
 
-const char *interpret_line(const char *_line) {
+void interpret_line(const char *_line) {
    char *line = strdup(_line);
 
    CHECK_CMD(line, "push") {
@@ -50,6 +50,13 @@ const char *interpret_line(const char *_line) {
    ELSE_CHECK_CMD(line, "pop") {
       pop_variable();
    }
+   ELSE_CHECK_CMD(line, "popn") {
+      strtok(line, " ");
+      unsigned long amount = strtoul(strtok(NULL, " "), NULL, 10);
+
+      for (unsigned long i = 0; i < amount; i++)
+         pop_variable();
+   }
    ELSE_CHECK_CMD(line, "math") {
       strtok(line, " ");
       char *dest = strtok(NULL, " ");
@@ -58,25 +65,29 @@ const char *interpret_line(const char *_line) {
 
       switch (*operator) {
          case '+':
-         save_variable(lookup_variable(dest), VARIABLE_TYPE_NUMBER, (union variable_value){
-            lookup_variable(dest)->value.int_value + lookup_variable(operand)->value.int_value
-         });
-         break;
+            variable_t *dest_variable = lookup_variable(dest);
+            
+            if (dest_variable->type == VARIABLE_TYPE_STRING)
+               strcat(dest_variable->value.string_value, lookup_variable(operand)->value.string_value);
+            else save_variable(dest_variable, VARIABLE_TYPE_NUMBER, (union variable_value){
+               dest_variable->value.int_value + lookup_variable(operand)->value.int_value
+            });
+            break;
          case '-':
-         save_variable(lookup_variable(dest), VARIABLE_TYPE_NUMBER, (union variable_value){
-            lookup_variable(dest)->value.int_value - lookup_variable(operand)->value.int_value
-         });
-         break;
+            save_variable(lookup_variable(dest), VARIABLE_TYPE_NUMBER, (union variable_value){
+               lookup_variable(dest)->value.int_value - lookup_variable(operand)->value.int_value
+            });
+            break;
          case '*':
-         save_variable(lookup_variable(dest), VARIABLE_TYPE_NUMBER, (union variable_value){
-            lookup_variable(dest)->value.int_value * lookup_variable(operand)->value.int_value
-         });
-         break;
+            save_variable(lookup_variable(dest), VARIABLE_TYPE_NUMBER, (union variable_value){
+               lookup_variable(dest)->value.int_value * lookup_variable(operand)->value.int_value
+            });
+            break;
          case '/':
-         save_variable(lookup_variable(dest), VARIABLE_TYPE_NUMBER, (union variable_value){
-            lookup_variable(dest)->value.int_value / lookup_variable(operand)->value.int_value
-         });
-         break;   
+            save_variable(lookup_variable(dest), VARIABLE_TYPE_NUMBER, (union variable_value){
+               lookup_variable(dest)->value.int_value / lookup_variable(operand)->value.int_value
+            });
+            break;   
          default: printf("Unknown operator \"%s\"\n", operator); break;
       }
    }
@@ -120,9 +131,35 @@ const char *interpret_line(const char *_line) {
       
       variable_t *lookup = lookup_variable(identifier);
       if (lookup->type == VARIABLE_TYPE_NUMBER)
+      #ifndef STRAIGHT_ECHO
          printf("echo: %d\n", lookup->value.int_value);
-      else if (lookup->type == VARIABLE_TYPE_STRING)
+      #elif STRAIGHT_ECHO
+         printf("%d\n", lookup->value.int_value);
+      #endif
+      else if (lookup->type == VARIABLE_TYPE_STRING) {
+         if (!strcmp(lookup->value.string_value, "clrscr"))
+            system("clear");
+         else
+      #ifndef STRAIGHT_ECHO
          printf("echo: %s\n", lookup->value.string_value);
+      #elif STRAIGHT_ECHO
+         printf("%s\n", lookup->value.string_value);
+      #endif
+      }
+   }
+   ELSE_CHECK_CMD(line, "intin") {
+      strtok(line, " ");
+
+      int input;
+      scanf("%d", &input);
+      save_variable(lookup_variable(strtok(NULL, " ")), VARIABLE_TYPE_NUMBER, (union variable_value){input});
+   }
+   ELSE_CHECK_CMD(line, "strin") {
+      strtok(line, " ");
+
+      char input[1024];
+      scanf("%s", input);
+      save_variable(lookup_variable(strtok(NULL, " ")), VARIABLE_TYPE_STRING, (union variable_value){.string_value = strdup(input)});
    }
    ELSE_CHECK_CMD(line, "wait") {
       strtok(line, " ");
@@ -130,7 +167,6 @@ const char *interpret_line(const char *_line) {
    }
 
    free(line);
-   return _line;
 }
 
 int interpret(char *source) {

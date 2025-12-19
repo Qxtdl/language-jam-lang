@@ -1,0 +1,32 @@
+program:
+push input ""
+push msg "Welcome_to_this_interactive_program"
+echo msg
+pop
+push msg "How_many_people_do_I_greet"
+echo msg
+pop
+push people_to_greet 0
+intin people_to_greet
+push loopcounter 0
+push one 1
+loop:
+push msg "What_is_your_name"
+echo msg
+pop
+strin input
+push msg "Your_name_is"
+echo msg
+pop
+echo input
+math loopcounter + one
+goto done loopcounter people_to_greet
+goto loop
+done:
+push msg "Done_thanks_for_trying"
+echo msg
+pop
+wait 2
+push clrscr "clrscr"
+echo clrscr
+goto program

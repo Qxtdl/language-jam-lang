@@ -1,0 +1,12 @@
+push str ""
+push input ""
+push clrscr "clrscr"
+loop:
+strin input
+goto clear_screen input clrscr
+math str + input
+echo str
+goto loop
+clear_screen:
+echo clrscr
+goto loop

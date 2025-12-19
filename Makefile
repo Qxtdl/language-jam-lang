@@ -1,10 +1,10 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror \
+CFLAGS = -Wall -Wextra -Werror -DSTRAIGHT_ECHO \
 	-Wno-error=format-security -Wno-error=unused-parameter
 
 BUILD = build
 OUTPUT = $(BUILD)/ljlang
-OUTPUT_ARGS = examples/fib.ljl
+OUTPUT_ARGS = examples/test.ljl
 
 CSRCS = $(shell find src -name '*.c')
 OBJS = $(patsubst %.c,$(BUILD)/%.o,$(CSRCS))

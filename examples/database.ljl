@@ -1,0 +1,33 @@
+push input ""
+push msg "Welcome_to_the_database"
+echo msg
+pop
+push msg "How_much_people_to_add_to_the_database"
+echo msg
+pop
+push names ""
+push people_to_add_to_database 0
+intin people_to_add_to_database
+push loopcounter 0
+push one 1
+loop:
+push msg "What_is_their_name"
+echo msg
+pop
+strin input
+push tab "_"
+math names + tab
+pop
+math names + input
+math loopcounter + one
+goto done loopcounter people_to_add_to_database
+goto loop
+done:
+push msg "Collecting_people_from_database_Please_wait"
+echo msg
+pop
+wait 3
+echo names
+push msg "Thanks_for_trying_out"
+echo msg
+wait 3

@@ -1,0 +1,18 @@
+push msg "EnterIterations"
+echo msg
+pop
+push iterations 0
+push loopcounter 0
+push one 1
+
+intin iterations
+push x 0
+push y 1
+loop:
+math loopcounter + one
+math x + y
+math y + x
+goto done loopcounter iterations
+goto loop
+done:
+push msg "done"

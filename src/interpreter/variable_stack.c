@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "../global.h"
+#include "interpreter.h"
 #include "variable_stack.h"
 
 static variable_t *variable_stack = NULL;
@@ -10,8 +11,9 @@ static size_t variable_stack_size = 0;
 static variable_t *variable_stack_end;
 
 void push_variable(const char *identifier, char *value, var_type_t type) {
-   if (type == VARIABLE_TYPE_STRING)
-      value = strtok(value + 1, "\"");
+   if (type == VARIABLE_TYPE_STRING) {
+      *strstr(++value, "\"") = '\0';
+   }
 
    variable_stack = realloc(variable_stack, ++variable_stack_size * sizeof(variable_t));
    variable_stack_end = &variable_stack[variable_stack_size - 1];
@@ -37,10 +39,12 @@ variable_t *lookup_variable(const char *identifier) {
    for (size_t i = 0; i < variable_stack_size; i++)
       if (!strcmp(variable_stack[i].identifier, identifier))
          return &variable_stack[i];
-   app_abort("lookup_variable()", "Could not look up variable %s", identifier);
+   interpreter_abort("lookup_variable()", "Could not look up variable %s", identifier);
 }
 
 inline void save_variable(variable_t *variable, var_type_t new_type, union variable_value variable_value) {
+   if (variable->type == VARIABLE_TYPE_STRING)
+      free(variable->value.string_value);
    variable->type = new_type;
    variable->value = variable_value;
 }

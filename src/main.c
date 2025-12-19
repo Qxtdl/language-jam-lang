@@ -5,12 +5,12 @@
 #include "interpreter/interpreter.h"
 
 static void usage(void) {
-   printf("Usage: ljlang <ljl file to interpret>\n");
+   printf("Usage: ljlang <.ljl file to interpret>\n");
    exit(0);
 }
 
 int main(int argc, char **argv) {
-   if (argc <= 1 || (argc >= 1 && !strcmp(argv[0], "--help"))) {
+   if (argc <= 1 || (argc >= 1 && !strcmp(argv[1], "--help"))) {
       usage();
    }
 

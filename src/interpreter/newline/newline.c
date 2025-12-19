@@ -15,7 +15,7 @@ lexed_source_code_t lex(char *source) {
       }
       lexed_source_code.line_entries.lines = realloc(
          lexed_source_code.line_entries.lines, 
-         (lexed_source_code.line_entries.size = (lexed_source_code.line_entries.size + 1) * sizeof(char *))
+         ++lexed_source_code.line_entries.size * sizeof(char *)
       );
       
       lexed_source_code.line_entries.lines[lexed_source_code.line_entries.amount++] = token;

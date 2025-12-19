@@ -1,0 +1,10 @@
+loop:
+push msg "Name?"
+echo msg
+pop
+push input ""
+strin input
+push msg "Hello,"
+echo msg
+echo input
+goto loop
