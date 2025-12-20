@@ -1,0 +1,34 @@
+push n 0
+push max 0
+push a 0
+push b 1
+push next 0
+push one 1
+push counter 0
+
+push msg "Fibonacci_Sequence_Generator"
+echo msg
+pop
+
+push msg "How_many_terms"
+echo msg
+pop
+intin max
+
+loop:
+goto done counter max
+
+echo a
+
+move next b
+math next + a
+move a b
+move b next
+
+math counter + one
+goto loop
+
+done:
+push msg "Done"
+echo msg
+pop

@@ -1,15 +1,18 @@
 push input ""
-push msg "Welcome_to_the_database"
-echo msg
-pop
-push msg "How_much_people_to_add_to_the_database"
-echo msg
-pop
+push color ""
 push names ""
-push people_to_add_to_database 0
-intin people_to_add_to_database
+push colors ""
+push msg "Welcome_to_the_interactive_database"
+echo msg
+pop
+push msg "How_many_people_to_add_to_the_database"
+echo msg
+pop
+push people_to_add 0
+intin people_to_add
 push loopcounter 0
 push one 1
+
 loop:
 push msg "What_is_their_name"
 echo msg
@@ -17,17 +20,36 @@ pop
 strin input
 push tab "_"
 math names + tab
-pop
 math names + input
+
+push msg "What_is_their_favorite_color"
+echo msg
+pop
+strin color
+push tab "_"
+math colors + tab
+math colors + color
+
+push msg "Hello_"
+echo msg
+pop
+echo input
+push msg "_who_likes_"
+echo msg
+pop
+echo color
+
 math loopcounter + one
-goto done loopcounter people_to_add_to_database
+goto done loopcounter people_to_add
 goto loop
+
 done:
-push msg "Collecting_people_from_database_Please_wait"
+push msg "Collecting_database_entries_Please_wait"
 echo msg
 pop
 wait 3
 echo names
+echo colors
 push msg "Thanks_for_trying_out"
 echo msg
 wait 3

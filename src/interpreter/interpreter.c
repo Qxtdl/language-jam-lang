@@ -175,10 +175,9 @@ int interpret(char *source) {
    interpreter.pc_index = 0;
 
    /* we need to check for labels first */
-   for (size_t i = 0; i < lexed_source_code.line_entries.amount; i++) {
+   for (size_t i = 0; i < lexed_source_code.line_entries.amount; i++)
       if (strstr(lexed_source_code.line_entries.lines[i], ":"))
          push_label(strtok((char *)lexed_source_code.line_entries.lines[i], ":"), i + 1);
-   }
 
    while (1)
       interpret_line(*increment_pc());
